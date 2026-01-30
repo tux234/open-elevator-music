@@ -57,7 +57,7 @@ export class MusicController {
   }
 
   async pause(): Promise<void> {
-    this.player.pause();
+    await this.player.pause();
     this.state.isPlaying = false;
     await this.saveState();
     this.updateBadge();
@@ -72,7 +72,7 @@ export class MusicController {
   }
 
   async setVolume(volume: number): Promise<void> {
-    this.player.setVolume(volume);
+    await this.player.setVolume(volume);
     this.state.volume = volume;
     await this.saveState();
   }

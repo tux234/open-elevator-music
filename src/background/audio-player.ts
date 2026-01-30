@@ -15,14 +15,16 @@ export class AudioPlayer {
     await this.sendToOffscreen({ type: 'PLAY', url });
   }
 
-  pause(): void {
+  async pause(): Promise<void> {
     this.playing = false;
-    this.sendToOffscreen({ type: 'PAUSE' });
+    await this.ensureOffscreenDocument();
+    await this.sendToOffscreen({ type: 'PAUSE' });
   }
 
-  setVolume(volume: number): void {
+  async setVolume(volume: number): Promise<void> {
     this.volume = Math.max(0, Math.min(100, volume));
-    this.sendToOffscreen({ type: 'SET_VOLUME', volume: this.volume });
+    await this.ensureOffscreenDocument();
+    await this.sendToOffscreen({ type: 'SET_VOLUME', volume: this.volume });
   }
 
   getVolume(): number {
@@ -55,6 +57,9 @@ export class AudioPlayer {
         reasons: ['AUDIO_PLAYBACK' as chrome.offscreen.Reason],
         justification: 'Play elevator music in the background',
       });
+
+      // Give the offscreen document a moment to initialize
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       this.offscreenDocumentCreated = true;
     } catch (error) {
