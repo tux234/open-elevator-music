@@ -1,6 +1,6 @@
 # Dependencies
 node_modules/
-bun.lockb
+bun.lock
 package-lock.json
 
 # Build outputs
@@ -12,6 +12,7 @@ dist/
 .vite/
 .vscode/
 .idea/
+.worktrees/
 
 # OS files
 .DS_Store
