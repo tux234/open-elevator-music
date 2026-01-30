@@ -8,5 +8,10 @@ export default defineConfig({
   plugins: [crx({ manifest })],
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      input: {
+        offscreen: 'src/offscreen.html',
+      },
+    },
   },
 });
