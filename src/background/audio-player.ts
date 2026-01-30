@@ -5,13 +5,13 @@ export class AudioPlayer {
   private volume = 80;
   private playing = false;
   private currentUrl: string | null = null;
+  private offscreenDocumentCreated = false;
 
   async play(url: string): Promise<void> {
     this.currentUrl = url;
     this.playing = true;
 
-    // In real implementation, this would create offscreen document
-    // For now, simplified for testing
+    await this.ensureOffscreenDocument();
     await this.sendToOffscreen({ type: 'PLAY', url });
   }
 
@@ -33,8 +33,42 @@ export class AudioPlayer {
     return this.playing;
   }
 
+  private async ensureOffscreenDocument(): Promise<void> {
+    if (this.offscreenDocumentCreated) {
+      return;
+    }
+
+    try {
+      // Check if offscreen document already exists
+      const existingContexts = await chrome.runtime.getContexts({
+        contextTypes: ['OFFSCREEN_DOCUMENT' as chrome.runtime.ContextType],
+      });
+
+      if (existingContexts.length > 0) {
+        this.offscreenDocumentCreated = true;
+        return;
+      }
+
+      // Create offscreen document for audio playback
+      await chrome.offscreen.createDocument({
+        url: 'src/offscreen.html',
+        reasons: ['AUDIO_PLAYBACK' as chrome.offscreen.Reason],
+        justification: 'Play elevator music in the background',
+      });
+
+      this.offscreenDocumentCreated = true;
+    } catch (error) {
+      console.error('Failed to create offscreen document:', error);
+      // Continue anyway - offscreen document might already exist
+      this.offscreenDocumentCreated = true;
+    }
+  }
+
   private async sendToOffscreen(message: any): Promise<void> {
-    // Simplified for testing - real implementation would use chrome.runtime.sendMessage
-    // to communicate with offscreen document
+    try {
+      await chrome.runtime.sendMessage(message);
+    } catch (error) {
+      console.error('Failed to send message to offscreen document:', error);
+    }
   }
 }
