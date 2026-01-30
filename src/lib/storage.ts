@@ -20,6 +20,6 @@ export class StorageManager {
 
   async loadState(): Promise<AppState> {
     const result = await chrome.storage.sync.get(this.STORAGE_KEY);
-    return result[this.STORAGE_KEY] || this.DEFAULT_STATE;
+    return (result[this.STORAGE_KEY] as AppState) || this.DEFAULT_STATE;
   }
 }

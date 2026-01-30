@@ -23,7 +23,7 @@ describe('JamendoSource', () => {
   });
 
   it('should handle errors gracefully', async () => {
-    global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+    (globalThis as any).fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
     const track = await source.fetchTrack();
     expect(track).toBeTruthy();

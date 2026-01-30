@@ -7,7 +7,7 @@ describe('MusicController', () => {
 
   beforeEach(() => {
     // Mock chrome.storage to return default state
-    vi.mocked(chrome.storage.sync.get).mockResolvedValue({});
+    (chrome.storage.sync.get as any).mockResolvedValue({});
     controller = new MusicController();
     vi.clearAllMocks();
   });

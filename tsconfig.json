@@ -9,7 +9,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "types": ["chrome", "vite/client", "vitest/globals"],
-    "rootDir": "./src",
     "outDir": "./dist"
   },
   "include": ["src/**/*", "tests/**/*"],

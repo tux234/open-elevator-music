@@ -4,7 +4,7 @@
 import { vi } from 'vitest';
 
 // Mock Chrome APIs
-global.chrome = {
+(globalThis as any).chrome = {
   storage: {
     sync: {
       get: vi.fn(),

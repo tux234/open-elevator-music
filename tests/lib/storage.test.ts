@@ -19,7 +19,7 @@ describe('StorageManager', () => {
   });
 
   it('should save state to chrome.storage.sync', async () => {
-    vi.mocked(chrome.storage.sync.set).mockResolvedValue(undefined);
+    (chrome.storage.sync.set as any).mockResolvedValue(undefined);
 
     await storage.saveState(defaultState);
 
@@ -27,7 +27,7 @@ describe('StorageManager', () => {
   });
 
   it('should load state from chrome.storage.sync', async () => {
-    vi.mocked(chrome.storage.sync.get).mockResolvedValue({ appState: defaultState });
+    (chrome.storage.sync.get as any).mockResolvedValue({ appState: defaultState });
 
     const state = await storage.loadState();
 
@@ -36,7 +36,7 @@ describe('StorageManager', () => {
   });
 
   it('should return default state when no saved state exists', async () => {
-    vi.mocked(chrome.storage.sync.get).mockResolvedValue({});
+    (chrome.storage.sync.get as any).mockResolvedValue({});
 
     const state = await storage.loadState();
 

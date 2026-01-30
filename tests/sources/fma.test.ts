@@ -24,7 +24,7 @@ describe('FMASource', () => {
 
   it('should handle errors gracefully', async () => {
     // Mock fetch to simulate API failure
-    global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+    (globalThis as any).fetch = vi.fn().mockRejectedValue(new Error('Network error'));
 
     // Should fall back to curated playlist
     const track = await source.fetchTrack();
@@ -32,7 +32,7 @@ describe('FMASource', () => {
   });
 
   it('should cache responses', async () => {
-    const fetchSpy = vi.spyOn(global, 'fetch');
+    const fetchSpy = vi.spyOn(globalThis as any, 'fetch');
 
     const track1 = await source.fetchTrack();
     const track2 = await source.fetchTrack();

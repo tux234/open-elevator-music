@@ -13,7 +13,7 @@ export class MusicController {
   private player = new AudioPlayer();
   private state: AppState;
 
-  private sources: Map<SourceType, MusicSource> = new Map([
+  private sources: Map<SourceType, MusicSource> = new Map<SourceType, MusicSource>([
     ['radio', new RadioSource()],
     ['fma', new FMASource()],
     ['jamendo', new JamendoSource()],
