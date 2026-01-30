@@ -41,39 +41,55 @@ export class AudioPlayer {
     }
 
     try {
-      // Check if offscreen document already exists
-      const existingContexts = await chrome.runtime.getContexts({
-        contextTypes: ['OFFSCREEN_DOCUMENT' as chrome.runtime.ContextType],
-      });
+      // Check if chrome.offscreen API is available
+      if (!chrome.offscreen) {
+        console.error('chrome.offscreen API not available');
+        throw new Error('Offscreen API not available');
+      }
 
-      if (existingContexts.length > 0) {
-        this.offscreenDocumentCreated = true;
-        return;
+      // Check if offscreen document already exists
+      if (chrome.runtime.getContexts) {
+        const existingContexts = await chrome.runtime.getContexts({
+          contextTypes: ['OFFSCREEN_DOCUMENT' as chrome.runtime.ContextType],
+        });
+
+        if (existingContexts.length > 0) {
+          console.log('Offscreen document already exists');
+          this.offscreenDocumentCreated = true;
+          return;
+        }
       }
 
       // Create offscreen document for audio playback
+      console.log('Creating offscreen document...');
       await chrome.offscreen.createDocument({
         url: 'src/offscreen.html',
         reasons: ['AUDIO_PLAYBACK' as chrome.offscreen.Reason],
         justification: 'Play elevator music in the background',
       });
 
+      console.log('Offscreen document created successfully');
+
       // Give the offscreen document a moment to initialize
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       this.offscreenDocumentCreated = true;
     } catch (error) {
       console.error('Failed to create offscreen document:', error);
-      // Continue anyway - offscreen document might already exist
-      this.offscreenDocumentCreated = true;
+      throw error;
     }
   }
 
   private async sendToOffscreen(message: any): Promise<void> {
     try {
+      console.log('Sending message to offscreen:', message.type);
       await chrome.runtime.sendMessage(message);
+      console.log('Message sent successfully');
     } catch (error) {
       console.error('Failed to send message to offscreen document:', error);
+      // Reset the flag so we try to recreate the document next time
+      this.offscreenDocumentCreated = false;
+      throw error;
     }
   }
 }
