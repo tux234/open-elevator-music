@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elevator Music</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎵 Elevator Music</h1>
+      </header>
+
+      <main>
+        <div class="now-playing">
+          <div class="label">Now Playing:</div>
+          <div id="track-title" class="track-title">Not playing</div>
+          <div id="track-artist" class="track-artist">—</div>
+        </div>
+
+        <div class="controls">
+          <button id="play-pause-btn" class="play-pause-btn">▶️ Play</button>
+        </div>
+
+        <div class="volume-control">
+          <label for="volume-slider">Volume:</label>
+          <input
+            type="range"
+            id="volume-slider"
+            min="0"
+            max="100"
+            value="80"
+            class="volume-slider"
+          />
+          <span id="volume-value" class="volume-value">80%</span>
+        </div>
+
+        <div class="source-control">
+          <label for="source-select">Source:</label>
+          <select id="source-select" class="source-select">
+            <option value="radio">Radio Streams</option>
+            <option value="fma">Free Music Archive</option>
+            <option value="jamendo">Jamendo</option>
+          </select>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>
